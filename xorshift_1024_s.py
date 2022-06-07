@@ -55,19 +55,28 @@ class Xorshift1024s:
         return self.next_state() % 2
 
     # gera uma sequencia de bit aleatoria, deslocando a o ultimo bit gerado para a esquerda sucessivamente ate
-    # que o numero de bits desejado tenha sido gerado
-    def generate(self, size: int = 1) -> (int, int):
+    # que o numero de bits desejado tenha sido gerado; esse metodo tambem conta o tempo de execucao a fim de
+    # fornecer dados para o relatorio
+    def generate_and_record_time(self, size: int = 1) -> (int, int):
         start = time.time()
         n = 0
         for _ in range(size):
             n = (n << 1) | self.next_bit()
         return n, time.time() - start
 
+    # gera uma sequencia de bit aleatoria, deslocando a o ultimo bit gerado para a esquerda sucessivamente ate
+    # que o numero de bits desejado tenha sido gerado;
+    def generate(self, size: int = 1) -> int:
+        n = 0
+        for _ in range(size):
+            n = (n << 1) | self.next_bit()
+        return n
+
     # feito para ajudar no processo de gerar números primos; esse metodo não garante que um número é primo(exceto no
     # caso de n = 2), porém garante que os número não é par, o que naturalmente quebra um dos requisitos para um número
     # ser primo(quando esse numero nao é 2, claro)
-    def generate_prime(self, size: int = 1) -> (int, int):
-        n = self.generate(size) | 1
+    def generate_prime(self, size: int = 1) -> int:
+        n = self.generate(size)
         if n != 2:
             return n | 1
         return n

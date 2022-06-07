@@ -2,6 +2,8 @@ from random import randint
 
 
 # implementacao baseada na seção Algorithm de https://en.wikipedia.org/wiki/Fermat_primality_test
+# rounds_of_testing devido ao fato desse ser o numero padrao usado pelo openssl, como informado aqui
+# https://www.openssl.org/docs/man1.1.1/man1/openssl-prime.html
 def fermat_test(n: int, rounds_of_testing: int = 100) -> bool:
     # algoritmo projetado para n > 3, porem como 2 e 3 podem ser gerados, o teste é realizado
     if n in [2, 3]:
