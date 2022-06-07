@@ -1,8 +1,10 @@
 import random
+import time
 
 
+# constantes propostas por https://vigna.di.unimi.it/ftp/papers/xorshift.pdf
+# algoritmo baseado no contido em https://en.wikipedia.org/wiki/Xorshift
 class Xorshift1024s:
-    # constantes propostas em https://vigna.di.unimi.it/ftp/papers/xorshift.pdf
     A = 31
     B = 11
     C = 30
@@ -54,17 +56,22 @@ class Xorshift1024s:
 
     # gera uma sequencia de bit aleatoria, deslocando a o ultimo bit gerado para a esquerda sucessivamente ate
     # que o numero de bits desejado tenha sido gerado
-    def generate(self, size: int = 1) -> int:
+    def generate(self, size: int = 1) -> (int, int):
+        start = time.time()
         n = 0
         for _ in range(size):
             n = (n << 1) | self.next_bit()
-        return n
+        return n, time.time() - start
 
     # feito para ajudar no processo de gerar números primos; esse metodo não garante que um número é primo(exceto no
-    # caso de n = 2), porém garante que o número não é par, o que naturalmente quebra um dos requisitos para um número
-    # ser primo
-    def generate_prime(self, size: int = 1) -> int:
+    # caso de n = 2), porém garante que os número não é par, o que naturalmente quebra um dos requisitos para um número
+    # ser primo(quando esse numero nao é 2, claro)
+    def generate_prime(self, size: int = 1) -> (int, int):
         n = self.generate(size) | 1
         if n != 2:
             return n | 1
         return n
+
+    # apenas pra printar as coisas bunitinho
+    def get_algorithm_name(self) -> str:
+        return 'Xorshift1024*'

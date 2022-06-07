@@ -1,7 +1,9 @@
+import time
 from math import gcd
 import random
 
 
+# algoritmo baseado no contido em https://pt.wikipedia.org/wiki/Blum_Blum_Shub
 class BlumBlumShub:
     def __init__(self, x0: int = 1, p: int = 3141592653589771, q: int = 2718281828459051, generate_x0: bool = True) -> None:
         # se x0 n tiver sido providenciado, gera um
@@ -30,17 +32,22 @@ class BlumBlumShub:
 
     # gera uma sequencia de bit aleatoria, deslocando a o ultimo bit gerado para a esquerda sucessivamente ate
     # que o numero de bits desejado tenha sido gerado
-    def generate(self, size: int = 1) -> int:
+    def generate(self, size: int = 1) -> (int, int):
+        start = time.time()
         n = 0
         for _ in range(size):
             n = (n << 1) | self.next_bit()
-        return n
+        return n, time.time() - start
 
     # feito para ajudar no processo de gerar números primos; esse metodo não garante que um número é primo(exceto no
     # caso de n = 2), porém garante que o número não é par, o que naturalmente quebra um dos requisitos para um número
-    # ser primo
-    def generate_prime(self, size: int = 1) -> int:
+    # ser primo(quando esse numero nao é 2, claro)
+    def generate_prime(self, size: int = 1) -> (int, int):
         n = self.generate(size) | 1
         if n != 2:
             return n | 1
         return n
+
+    # apenas pra printar as coisas bunitinho
+    def get_algorithm_name(self) -> str:
+        return 'Blum Blum Shub'
